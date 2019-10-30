@@ -3,3 +3,7 @@
 ################################################################################
 
 /.vs/SchoolManagementApp
+/SchoolManagementApp/bin/Debug/netcoreapp3.0
+/SchoolManagementApp/obj
+/SchoolManagementApp.Tests/bin/Debug/netcoreapp3.0
+/SchoolManagementApp.Tests/obj
