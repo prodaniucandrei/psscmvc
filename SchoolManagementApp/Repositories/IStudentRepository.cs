@@ -9,5 +9,6 @@ namespace SchoolManagementApp.Repositories
     public interface IStudentRepository
     {
         Task Create(Student student);
+        Task<List<Student>> GetAllStudents();
     }
 }

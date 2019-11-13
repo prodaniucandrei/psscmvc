@@ -1,4 +1,5 @@
-﻿using SchoolManagementApp.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SchoolManagementApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,11 @@ namespace SchoolManagementApp.Repositories
         {
             _context.Add(student);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Student>> GetAllStudents()
+        {
+            return await _context.Students.ToListAsync();
         }
     }
 }

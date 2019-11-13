@@ -9,7 +9,7 @@ using SchoolManagementApp.Models;
 namespace SchoolManagementApp.Migrations
 {
     [DbContext(typeof(StudentDbContext))]
-    [Migration("20191030144906_InitialMigration")]
+    [Migration("20191030161939_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

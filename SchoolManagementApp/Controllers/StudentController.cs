@@ -5,29 +5,32 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SchoolManagementApp.Models;
 using SchoolManagementApp.Repositories;
+using SchoolManagementApp.Services;
 
 namespace SchoolManagementApp.Controllers
 {
-    public class StudentsController : Controller
+    public class StudentController : Controller
     {
         private readonly StudentDbContext _context;
-        private readonly IStudentRepository _repository;
+        private readonly IStudentRepository _studentRepository;
+        private readonly MessageBroker _messageBroker;
 
-        public StudentsController(IStudentRepository repository)
+        public StudentController(IStudentRepository studentRepository, MessageBroker messageBroker)
         {
-            //_context = context;
-            _repository = repository;
+            _studentRepository = studentRepository;
+            _messageBroker = messageBroker;
         }
 
-        // GET: Students
+        // GET: Student
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Students.ToListAsync());
+            return View(await _studentRepository.GetAllStudents());
         }
 
-        // GET: Students/Details/5
+        // GET: Student/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,13 +48,13 @@ namespace SchoolManagementApp.Controllers
             return View(student);
         }
 
-        // GET: Students/Create
+        // GET: Student/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Students/Create
+        // POST: Student/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -60,13 +63,14 @@ namespace SchoolManagementApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _repository.Create(student);
+                await _studentRepository.Create(student);
+                await _messageBroker.SendMessage(JsonConvert.SerializeObject(student));
                 return RedirectToAction(nameof(Index));
             }
             return View(student);
         }
 
-        // GET: Students/Edit/5
+        // GET: Student/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -82,7 +86,7 @@ namespace SchoolManagementApp.Controllers
             return View(student);
         }
 
-        // POST: Students/Edit/5
+        // POST: Student/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -117,7 +121,7 @@ namespace SchoolManagementApp.Controllers
             return View(student);
         }
 
-        // GET: Students/Delete/5
+        // GET: Student/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -135,7 +139,7 @@ namespace SchoolManagementApp.Controllers
             return View(student);
         }
 
-        // POST: Students/Delete/5
+        // POST: Student/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

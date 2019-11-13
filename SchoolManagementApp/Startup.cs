@@ -8,8 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RabbitMQ.Client;
 using SchoolManagementApp.Models;
 using SchoolManagementApp.Repositories;
+using SchoolManagementApp.Services;
 
 namespace SchoolManagementApp
 {
@@ -26,8 +28,10 @@ namespace SchoolManagementApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<StudentDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlConnectionString"))) ;
+            services.AddDbContext<StudentDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlConnectionString")));
             services.AddTransient<IStudentRepository, StudentRepository>();
+            services.AddTransient<MessageBroker, MessageBroker>();
+            services.AddSingleton(new ConnectionFactory() { Uri = new Uri(Configuration.GetConnectionString("AmqpConnectionString")) }.CreateConnection());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
